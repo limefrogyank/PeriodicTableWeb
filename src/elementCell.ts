@@ -13,9 +13,10 @@ provideFASTDesignSystem()
 
 const template = html<ElementCell>`
 
-<div class="main" style="margin-left:auto;margin-right:auto;padding:0; };">
+<div class="main" style="margin-left:auto;margin-right:auto;padding:0;">
     <div class="atomicNumber">${x=>x.number}</div>
     <div class="symbol">${x=>x.symbol}</div>    
+    <div class="name">${x=>x.name}</div>    
 </div>
 
 `;
@@ -26,12 +27,19 @@ const styles = css`
 }
 .main {
     color: ${neutralForegroundRest.createCSS()};
+    outline: 1px solid black;
 }
 .symbol{
     font-weight:bold;
+    text-align:center;
 }
 .atomicNumber{
-    font-size:x-small;
+    font-size:small;
+    text-align:center;
+}
+.name{
+    font-size:6pt;
+    text-align:center;
 }
 
 `;

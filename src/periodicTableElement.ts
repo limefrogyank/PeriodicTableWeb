@@ -36,7 +36,7 @@ ElementCell;
 const template = html<PeriodicTable>`
 
 <div style="margin-left:auto;margin-right:auto;" class="main">
-    <fast-data-grid-2 ${ref("periodicTableGrid")} grid-template-columns="42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px 42px" ></data-grid>
+    <fast-data-grid-2 ${ref("periodicTableGrid")}  ></data-grid>
 </div>
 
 `;
@@ -141,7 +141,8 @@ export class PeriodicTable extends FASTElement {
 				? false
 				: y.columnDefinition.columnDataKey != "0" && y.rowData[y.columnDefinition.columnDataKey].number != -1, html<DataGridCell>`
 				<element-cell symbol="${x => x.rowData[x.columnDefinition.columnDataKey].symbol}"
-                            number="${x => x.rowData[x.columnDefinition.columnDataKey].number}">
+                            number="${x => x.rowData[x.columnDefinition.columnDataKey].number}"
+							name="${x=> x.rowData[x.columnDefinition.columnDataKey].name}">
 				</element-cell>
 				`)}
 			</template>
@@ -149,7 +150,7 @@ export class PeriodicTable extends FASTElement {
 
             const headerContentCellTemplate = html<DataGridCell>`
 			<template>
-				<div style="padding:0; color:black; font-size:small; text-align:center;">
+				<div style="padding:0; color:black; font-size:small; text-align:center; border:0px;">
 						${x => 
 							x.rowData === null || x.columnDefinition === null || x.columnDefinition.columnDataKey === null
 							? (this.romanGroupNumbers ? groupMapping.get(+x.columnDefinition.columnDataKey) : x.columnDefinition.columnDataKey)
@@ -162,9 +163,9 @@ export class PeriodicTable extends FASTElement {
 
 			const customCellItemTemplate = html`
 			<fast-data-grid-cell
-				style="padding:0;"
+				style="padding:0;border:${(x,c)=> c.parent.rowData[c.index] != undefined && c.parent.rowData[c.index+1].number !=-1 ? "1px black solid" : "0"};border-collapse:collapse;border-radius:0;"
 				grid-column="${(x, c) => c.index + 1}"
-				:rowData="${(x, c) => c.parent.rowData}"
+				:rowData="${(x, c) => {console.log(c.parent.rowData[c.index]);return c.parent.rowData;}}"
 				:columnDefinition="${x => x}"
 			></fast-data-grid-cell>
 			`;
