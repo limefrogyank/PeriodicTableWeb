@@ -1,4 +1,41 @@
-export var periodicTableData = {
+export interface BlankSpot {
+    "number":number;
+}
+export interface ElementData{
+    "name": string,
+    "appearance": string,
+    "atomic_mass": number,
+    "boil": number,
+    "category": string,
+    "color": string,
+    "density": number,
+    "discovered_by": string,
+    "melt": number,
+    "molar_heat": number,
+    "named_by": string,
+    "number": number,
+    "period": number,
+    "phase": string,
+    "source": string,
+    "spectral_img": string,
+    "summary": string,
+    "symbol": string,
+    "xpos": number,
+    "ypos": number,
+    "shells": number[],
+    "electron_configuration": string,
+    "electron_configuration_semantic": string,
+    "electron_affinity": number,
+    "electronegativity_pauling": number,
+    "ionization_energies": number[],
+    "cpk-hex": string
+}
+
+export interface PeriodicTableData{
+    elements: ElementData[];
+}
+
+export var periodicTableData :PeriodicTableData = {
     "elements": [
         {
             "name": "Hydrogen",

@@ -2,7 +2,7 @@ import {FASTElement, customElement, attr, html, ref, css,when} from '@microsoft/
 import { ColumnDefinition, DataGrid, DataGridCell, Button } from '@microsoft/fast-foundation';
 import { provideFASTDesignSystem, fastButton, fastDialog, fastDataGrid, fastDataGridRow, fastDataGridCell, StandardLuminance } from '@microsoft/fast-components';
 import {baseLayerLuminance, neutralFillRest} from '@microsoft/fast-components';
-import {periodicTableData} from './elements';
+import {BlankSpot, ElementData, periodicTableData} from './elements';
 import {ElementCell} from './elementCell';
 import {ChemicalElementButton, chemicalElementButton} from './elementButton';
 import {DataGridRow2, fastDataGridRow2} from './DataGridRow2';
@@ -65,6 +65,7 @@ enum LuminanceMode{
 export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) visible: boolean = false;
 	@attr({ mode: 'boolean' }) hideTransitionMetals:boolean=false;
+    @attr({ mode: 'boolean' }) showNames:boolean=false;
     @attr({ mode: 'boolean' }) romanGroupNumbers:boolean=true;
     @attr colorMode :string = "light";
 
@@ -96,8 +97,8 @@ export class PeriodicTable extends FASTElement {
 		
 
 		let elements = periodicTableData.elements;
-		var sortedElements = [];
-		var row = new Object();
+		var sortedElements : Array<Map<number,ElementData|BlankSpot>> = [];
+		var row : Map<number,ElementData|BlankSpot> = new Map<number,ElementData|BlankSpot>();
 		let groupMapping: Map<number,string> = new Map<number,string>([
 			[1,'IA'],
 			[2,'IIA'],
@@ -118,17 +119,18 @@ export class PeriodicTable extends FASTElement {
 			[17,'VIIA'],
 			[18,'VIIIA']
 		]);
-		for (let period = 1; period < (this.hideTransitionMetals ? 7 : 11); period++){
+
+		for (let period = 0; period < (this.hideTransitionMetals ? 6 : 10); period++){
 			for (let group = 1; group<=18; group++){
-				let found = elements.find(x=>x.xpos == group && x.ypos == period);
+				let found = elements.find(x=>x.xpos == group && x.ypos == period+1);
 				if (found !== undefined){
-					row[group] = found;
+					row.set(group, found);
 				}else{
-					row[group] = {'number': -1};
+					row.set(group,{'number': -1});
 				}
 			}
 			sortedElements.push(row);
-			row = new Object();
+			row = new Map<number,ElementData>();
 		}
 
         
@@ -136,13 +138,19 @@ export class PeriodicTable extends FASTElement {
 
 		const buttonCellTemplate = html<DataGridCell>`
 			<template>
-				${when(y =>
+                
+				${when((y) =>
+                    
 				y.rowData === null || y.columnDefinition === null || y.columnDefinition.columnDataKey === null
 				? false
-				: y.columnDefinition.columnDataKey != "0" && y.rowData[y.columnDefinition.columnDataKey].number != -1, html<DataGridCell>`
-				<element-cell symbol="${x => x.rowData[x.columnDefinition.columnDataKey].symbol}"
-                            number="${x => x.rowData[x.columnDefinition.columnDataKey].number}"
-							name="${x=> x.rowData[x.columnDefinition.columnDataKey].name}">
+				: (y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey).number != -1 , html<DataGridCell>`
+                ${(x,c)=>console.log(x.columnDefinition)}
+				<element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
+                            number="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).number}"
+							name="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).name}"
+                            mass="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).atomic_mass}"
+                            showNames="${this.showNames}" 
+                            >
 				</element-cell>
 				`)}
 			</template>
@@ -163,9 +171,9 @@ export class PeriodicTable extends FASTElement {
 
 			const customCellItemTemplate = html`
 			<fast-data-grid-cell
-				style="padding:0;border:${(x,c)=> c.parent.rowData[c.index] != undefined && c.parent.rowData[c.index+1].number !=-1 ? "1px black solid" : "0"};border-collapse:collapse;border-radius:0;"
-				grid-column="${(x, c) => c.index + 1}"
-				:rowData="${(x, c) => {console.log(c.parent.rowData[c.index]);return c.parent.rowData;}}"
+				style="padding:0;margin:-1px 0 0 -1px;border:${(x,c)=> (c.parent.rowData as Map<number,ElementData>).get(c.index+1) != undefined && (c.parent.rowData as Map<number,ElementData>).get(c.index+1).number !=-1 ? "1px black solid" : "0"};border-collapse:collapse;border-radius:0;"
+				grid-column="${(x, c) => c.index+1}"
+				:rowData="${(x, c) =>  c.parent.rowData}"
 				:columnDefinition="${x => x}"
 			></fast-data-grid-cell>
 			`;
@@ -183,7 +191,7 @@ export class PeriodicTable extends FASTElement {
 			<fast-data-grid-cell 
                             style="padding:0;"
 				cell-type="columnheader"
-				grid-column="${(x, c) => c.index + 1}"
+				grid-column="${(x, c) => c.index+1 }"
                 :rowData="${(x, c) => c.parent.rowData}"
 				:columnDefinition="${x => x}"
 			>
@@ -251,12 +259,12 @@ export class PeriodicTable extends FASTElement {
 			];
 		}else {
 			colDefs = [	
-				{
-					
+				{					
 					columnDataKey: '1',
 					cellTemplate: buttonCellTemplate,
                     headerCellTemplate: headerContentCellTemplate,
-					cellFocusTargetCallback: this.getFocusTarget
+					cellFocusTargetCallback: this.getFocusTarget,
+                    
 				},
 				{
 					columnDataKey: '2',
@@ -415,3 +423,9 @@ export class PeriodicTable extends FASTElement {
 	}
 }
   
+function test(y:any){
+    console.log(y.rowData);
+    console.log(+y.columnDefinition.columnDataKey);
+    console.log((y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey)); 
+    return true;
+}

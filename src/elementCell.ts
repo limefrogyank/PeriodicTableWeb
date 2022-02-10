@@ -15,8 +15,9 @@ const template = html<ElementCell>`
 
 <div class="main" style="margin-left:auto;margin-right:auto;padding:0;">
     <div class="atomicNumber">${x=>x.number}</div>
-    <div class="symbol">${x=>x.symbol}</div>    
-    <div class="name">${x=>x.name}</div>    
+    <div class="symbol">${x=>x.symbol}</div>
+    ${when(x=> x.showNames, html`<div class="name">${x=>x.name}</div>`)}
+    <div class="mass">${x=>x.mass}</div>
 </div>
 
 `;
@@ -41,6 +42,10 @@ const styles = css`
     font-size:6pt;
     text-align:center;
 }
+.mass{
+    font-size:x-small;
+    text-align:center; 
+}
 
 `;
 
@@ -57,7 +62,6 @@ export class ElementCell extends FASTElement {
     @attr phase: string;
     
     @attr({ mode: 'boolean' }) showNames: boolean = true;
-	@attr({ mode: 'boolean' }) showMasses: boolean = true;
     
     connectedCallback(){
 		super.connectedCallback();
