@@ -20,3 +20,4 @@ Apply any or all of these attributes to customize the appearance of the periodic
 `colorMode` - **"light" | "dark" | "system"** - default: "system" - Overrides browser default luminance mode (i.e. light mode/dark mode)
 
 
+![image](https://user-images.githubusercontent.com/7821384/153533584-40e6afdd-bbdb-4bf1-9a75-94c99ddeff34.png)
