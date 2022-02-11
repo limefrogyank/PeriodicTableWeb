@@ -1,6 +1,9 @@
 export interface BlankSpot {
     "number":number;
 }
+
+// Element json data provided by https://github.com/Bowserinator/Periodic-Table-JSON
+
 export interface ElementData{
     "name": string,
     "appearance": string,
