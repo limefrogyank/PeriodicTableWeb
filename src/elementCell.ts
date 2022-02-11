@@ -14,10 +14,10 @@ provideFASTDesignSystem()
 const template = html<ElementCell>`
 
 <div class="main" style="margin-left:auto;margin-right:auto;padding:0;">
-    <div class="atomicNumber">${x=>x.number}</div>
-    <div class="symbol">${x=>x.symbol}</div>
-    ${when(x=> x.showNames, html`<div class="name">${x=>x.name}</div>`)}
-    <div class="mass">${x=>x.mass}</div>
+    <div class="atomicNumber" aria-label="Atomic Number ${x=>x.number}">${x=>x.number}</div>
+    <div class="symbol" aria-label="Symbol ${x=>x.symbol.replace(/./g,' $&')}">${x=>x.symbol}</div>
+    ${when(x=> x.showNames, html`<div class="name" aria-label="${x=>x.name}">${x=>x.name}</div>`)}
+    <div class="mass" aria-label="Atomic Mass ${x=>x.mass}">${x=>x.mass}</div>
 </div>
 
 `;
@@ -40,6 +40,7 @@ const styles = css`
 }
 .name{
     font-size:6pt;
+    line-height:6pt;
     text-align:center;
 }
 .mass{
