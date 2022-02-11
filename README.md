@@ -18,3 +18,5 @@ Apply any or all of these attributes to customize the appearance of the periodic
 `casGroupNames` - **boolean** - default: false - Replaces IUPAC group numbers (1-18) with IA, IIB, etc CAS group names.
 
 `colorMode` - **"light" | "dark" | "system"** - default: "system" - Overrides browser default luminance mode (i.e. light mode/dark mode)
+
+
