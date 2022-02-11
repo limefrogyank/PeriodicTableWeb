@@ -1,12 +1,13 @@
 import {FASTElement, customElement, attr, html, ref, css,when} from '@microsoft/fast-element';
 import { ColumnDefinition, DataGrid, DataGridCell, Button } from '@microsoft/fast-foundation';
-import { provideFASTDesignSystem, fastButton, fastDialog, fastDataGrid, fastDataGridRow, fastDataGridCell, StandardLuminance } from '@microsoft/fast-components';
+import { provideFASTDesignSystem, fastButton, fastDialog, fastDataGrid, fastDataGridRow, fastDataGridCell, StandardLuminance,neutralForegroundRest } from '@microsoft/fast-components';
 import {baseLayerLuminance, neutralFillRest} from '@microsoft/fast-components';
 import {BlankSpot, ElementData, periodicTableData} from './elements';
 import {ElementCell} from './elementCell';
 import {ChemicalElementButton, chemicalElementButton} from './elementButton';
 import {DataGridRow2, fastDataGridRow2} from './DataGridRow2';
 import {DataGrid2, fastDataGrid2} from './DataGrid2';
+import {DataGridCell2, fastDataGridCell2} from './DataGridCell2';
 
 
 // provideFluentDesignSystem()
@@ -19,8 +20,8 @@ import {DataGrid2, fastDataGrid2} from './DataGrid2';
 provideFASTDesignSystem()
     .register(
         fastButton(),
-        fastDataGrid(),
-        fastDataGridRow(),
+        //fastDataGrid(),
+        //fastDataGridRow(),
         fastDataGridCell(), 
         fastDataGridRow2(),
         fastDataGrid2()    
@@ -66,7 +67,7 @@ export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) visible: boolean = false;
 	@attr({ mode: 'boolean' }) hideTransitionMetals:boolean=false;
     @attr({ mode: 'boolean' }) showNames:boolean=false;
-    @attr({ mode: 'boolean' }) romanGroupNumbers:boolean=true;
+    @attr({ mode: 'boolean' }) casGroupNames:boolean=false;
     @attr colorMode :string = "light";
 
 	cancelButton: HTMLButtonElement;
@@ -119,6 +120,26 @@ export class PeriodicTable extends FASTElement {
 			[17,'VIIA'],
 			[18,'VIIIA']
 		]);
+        let ariaGroupMapping: Map<number,string> = new Map<number,string>([
+			[1,'1A'],
+			[2,'2A'],
+			[3,'3B'],
+			[4,'4B'],
+			[5,'5B'],
+			[6,'6B'],
+			[7,'7B'],
+			[8,'8B'],
+			[9,'8B'],
+			[10,'8B'],
+			[11,'1B'],
+			[12,'2B'],
+			[13,'3A'],
+			[14,'4A'],
+			[15,'5A'],
+			[16,'6A'],
+			[17,'7A'],
+			[18,'8A']
+		]);
 
 		for (let period = 0; period < (this.hideTransitionMetals ? 6 : 10); period++){
 			for (let group = 1; group<=18; group++){
@@ -144,8 +165,7 @@ export class PeriodicTable extends FASTElement {
 				y.rowData === null || y.columnDefinition === null || y.columnDefinition.columnDataKey === null
 				? false
 				: (y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey).number != -1 , html<DataGridCell>`
-                ${(x,c)=>console.log(x.columnDefinition)}
-				<element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
+                <element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
                             number="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).number}"
 							name="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).name}"
                             mass="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).atomic_mass}"
@@ -158,10 +178,10 @@ export class PeriodicTable extends FASTElement {
 
             const headerContentCellTemplate = html<DataGridCell>`
 			<template>
-				<div style="padding:0; color:black; font-size:small; text-align:center; border:0px;">
+				<div style="padding:0; ${neutralForegroundRest.createCSS()};font-size:small; text-align:center; border:0px;" aria-label="">
 						${x => 
 							x.rowData === null || x.columnDefinition === null || x.columnDefinition.columnDataKey === null
-							? (this.romanGroupNumbers ? groupMapping.get(+x.columnDefinition.columnDataKey) : x.columnDefinition.columnDataKey)
+							? (this.casGroupNames ? groupMapping.get(+x.columnDefinition.columnDataKey) : x.columnDefinition.columnDataKey)
 							: x.rowData[x.columnDefinition.columnDataKey].symbol}
 				</div>
 				
@@ -171,6 +191,8 @@ export class PeriodicTable extends FASTElement {
 
 			const customCellItemTemplate = html`
 			<fast-data-grid-cell
+                aria-colindex="${(x,c)=>c.index+1}"
+                
 				style="padding:0;margin:-1px 0 0 -1px;border:${(x,c)=> (c.parent.rowData as Map<number,ElementData>).get(c.index+1) != undefined && (c.parent.rowData as Map<number,ElementData>).get(c.index+1).number !=-1 ? "1px black solid" : "0"};border-collapse:collapse;border-radius:0;"
 				grid-column="${(x, c) => c.index+1}"
 				:rowData="${(x, c) =>  c.parent.rowData}"
@@ -180,6 +202,7 @@ export class PeriodicTable extends FASTElement {
 
 		const customRowItemTemplate = html`
 		<fast-data-grid-row-2
+            aria-rowindex="${(x,c)=>c.index+1}"
 					style="padding:0;border-bottom:0;"
 			:rowData="${x => x}"
 			:cellItemTemplate="${(x, c) => c.parent.cellItemTemplate}"
@@ -424,8 +447,8 @@ export class PeriodicTable extends FASTElement {
 }
   
 function test(y:any){
-    console.log(y.rowData);
-    console.log(+y.columnDefinition.columnDataKey);
-    console.log((y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey)); 
+    //console.log(y.rowData);
+    //console.log(+y.columnDefinition.columnDataKey);
+    //console.log((y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey)); 
     return true;
 }

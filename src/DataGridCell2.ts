@@ -1,6 +1,6 @@
 import {FASTElement, customElement, attr, html, ref, css,when} from '@microsoft/fast-element';
 import {DataGridCell, dataGridCellStyles as oldstyles} from '@microsoft/fast-components';
-import {  dataGridCellTemplate as template, ElementDefinitionContext,
+import {  dataGridCellTemplate as templateOld, ElementDefinitionContext,
     focusVisible,
     forcedColorsStylesheetBehavior } from '@microsoft/fast-foundation';
 import {  bodyFont,
@@ -21,7 +21,6 @@ import {
   keyEnd,
   keyHome,
 } from "@microsoft/fast-web-utilities";
-
 
 const styles = css`
 :host {
@@ -60,7 +59,27 @@ const styles = css`
     }
 `));
 
+const template = html<DataGridCell2>`
+<template
+    tabindex="-1"
+    role="${x => x.cellType ?? "gridcell"}"
+    class="
+    ${x =>
+        x.cellType === "columnheader"
+            ? "column-header"
+            : x.cellType === "rowheader"
+            ? "row-header"
+            : ""}
+    "
+>
+    <slot></slot>
+</template>
+`;
+
 export class DataGridCell2 extends DataGridCell {
+    // @attr ariaRow : number=-1;
+    // @attr ariaCol : number=-1;
+
   connectedCallback(): void {
       super.connectedCallback();
   }
