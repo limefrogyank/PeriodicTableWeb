@@ -36,7 +36,7 @@ ElementCell;
 
 const template = html<PeriodicTable>`
 
-<div style="margin-left:auto;margin-right:auto;" class="main">
+<div style="margin-left:auto;margin-right:auto;padding:10px;" class="main">
     <fast-data-grid-2 ${ref("periodicTableGrid")}  ></data-grid>
 </div>
 
@@ -68,7 +68,7 @@ export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) hideTransitionMetals:boolean=false;
     @attr({ mode: 'boolean' }) showNames:boolean=false;
     @attr({ mode: 'boolean' }) casGroupNames:boolean=false;
-    @attr colorMode :string = "light";
+    @attr colorMode :string = "light"; 
 
 	cancelButton: HTMLButtonElement;
 
