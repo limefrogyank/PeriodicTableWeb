@@ -2,6 +2,8 @@
 This is a periodic table you can add to any webpage.  Just add the javascript bundle, then use the custom web element:
 
 ```
+<script defer="defer" src="periodicTable.js"></script>
+
 <periodic-table></periodic-table>
 ```
 
