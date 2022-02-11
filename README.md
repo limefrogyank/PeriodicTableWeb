@@ -6,6 +6,7 @@ This is a periodic table you can add to any webpage.  Just add the javascript bu
 
 <periodic-table></periodic-table>
 ```
+The table is accessible by providing cursor key navigation and uses aria-labels to present the element data.
 
 ## Attributes
 
