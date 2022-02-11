@@ -141,7 +141,7 @@ export class PeriodicTable extends FASTElement {
 			[18,'8A']
 		]);
 
-		for (let period = 0; period < (this.hideTransitionMetals ? 6 : 10); period++){
+		for (let period = 0; period < (this.hideTransitionMetals ? 7 : 10); period++){
 			for (let group = 1; group<=18; group++){
 				let found = elements.find(x=>x.xpos == group && x.ypos == period+1);
 				if (found !== undefined){
@@ -150,6 +150,9 @@ export class PeriodicTable extends FASTElement {
 					row.set(group,{'number': -1});
 				}
 			}
+			// add -1 key with number -1
+			//row.set(-1, {'number': -1});
+			console.log(row);
 			sortedElements.push(row);
 			row = new Map<number,ElementData>();
 		}
@@ -162,9 +165,10 @@ export class PeriodicTable extends FASTElement {
                 
 				${when((y) =>
                     
-				y.rowData === null || y.columnDefinition === null || y.columnDefinition.columnDataKey === null
+				y.rowData === null || y.columnDefinition === null || y.columnDefinition.columnDataKey === null || y.columnDefinition.columnDataKey === ""
 				? false
 				: (y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey).number != -1 , html<DataGridCell>`
+				${x=>console.log(x.columnDefinition)}
                 <element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
                             number="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).number}"
 							name="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).name}"
@@ -193,7 +197,15 @@ export class PeriodicTable extends FASTElement {
 			<fast-data-grid-cell
                 aria-colindex="${(x,c)=>c.index+1}"
                 
-				style="padding:0;margin:-1px 0 0 -1px;border:${(x,c)=> (c.parent.rowData as Map<number,ElementData>).get(c.index+1) != undefined && (c.parent.rowData as Map<number,ElementData>).get(c.index+1).number !=-1 ? "1px black solid" : "0"};border-collapse:collapse;border-radius:0;"
+				style="padding:0;margin:-1px 0 0 -1px;border:${(x,c)=> {
+					let index = c.index + 1;
+					if (index > 2){
+						index = index + (this.hideTransitionMetals? 9:0);
+					} 
+					return (c.parent.rowData as Map<number,ElementData>).get(index) != undefined && (c.parent.rowData as Map<number,ElementData>).get(index).number !=-1 ? 
+					"1px black solid" : "0";
+				}
+				};border-collapse:collapse;border-radius:0;"
 				grid-column="${(x, c) => c.index+1}"
 				:rowData="${(x, c) =>  c.parent.rowData}"
 				:columnDefinition="${x => x}"
@@ -238,7 +250,7 @@ export class PeriodicTable extends FASTElement {
 					cellFocusTargetCallback: this.getFocusTarget
 				},
 				{
-					columnDataKey: '0',
+					columnDataKey: '',
 					cellTemplate: buttonCellTemplate,
                     headerCellTemplate: headerContentCellTemplate,
 					cellFocusTargetCallback: this.getFocusTarget
