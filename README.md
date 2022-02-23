@@ -8,6 +8,9 @@ This is a periodic table you can add to any webpage.  Just add the javascript bu
 ```
 The table is accessible by providing cursor key navigation and uses aria-labels to present the element data.
 
+## Demo 
+https://spot.pcc.edu/chemistry/periodic-table/
+
 ## Attributes
 
 Apply any or all of these attributes to customize the appearance of the periodic table.
