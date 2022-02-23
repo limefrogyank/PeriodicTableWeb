@@ -107,4 +107,3 @@ export const fastDataGridRow2 = DataGridRow2.compose({
     }
   });
   
-console.log(template);

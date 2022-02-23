@@ -80,10 +80,8 @@ export class PeriodicTable extends FASTElement {
 
 	connectedCallback(){ 
 		super.connectedCallback(); 
-
   
-		console.log(LuminanceMode[this.colorMode]);
-        if (LuminanceMode[this.colorMode] != LuminanceMode.system){
+		if (LuminanceMode[this.colorMode] != LuminanceMode.system){
 			baseLayerLuminance.setValueFor(document.body, LuminanceMode[this.colorMode] == LuminanceMode.dark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
 		} else {
 			const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; 
@@ -158,7 +156,7 @@ export class PeriodicTable extends FASTElement {
 			}
 			// add -1 key with number -1
 			//row.set(-1, {'number': -1});
-			console.log(row);
+			//console.log(row);
 			sortedElements.push(row);
 			row = new Map<number,ElementData>();
 		}
@@ -174,8 +172,7 @@ export class PeriodicTable extends FASTElement {
 				y.rowData === null || y.columnDefinition === null || y.columnDefinition.columnDataKey === null || y.columnDefinition.columnDataKey === ""
 				? false
 				: (y.rowData as Map<number,ElementData>).get(+y.columnDefinition.columnDataKey).number != -1 , html<DataGridCell>`
-				${x=>console.log(x.columnDefinition)}
-                <element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
+				<element-cell symbol="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).symbol}"
                             number="${x => (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).number}"
 							name="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).name}"
                             mass="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).atomic_mass}"
