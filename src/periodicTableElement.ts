@@ -52,7 +52,7 @@ const styles = css`
 
 `;
 
-enum LuminanceMode{
+enum LuminanceMode {
     light,
     dark,
     system
@@ -69,7 +69,7 @@ export class PeriodicTable extends FASTElement {
     @attr({ mode: 'boolean' }) showNames:boolean=false;
     @attr({ mode: 'boolean' }) casGroupNames:boolean=false;
 	@attr maxPrecision: number = 4;    
-    @attr colorMode :string = "light"; 
+    @attr colorMode :string = "system"; 
 
 	cancelButton: HTMLButtonElement;
 
@@ -80,9 +80,14 @@ export class PeriodicTable extends FASTElement {
 
 	connectedCallback(){ 
 		super.connectedCallback(); 
+
   
+		console.log(LuminanceMode[this.colorMode]);
         if (LuminanceMode[this.colorMode] != LuminanceMode.system){
-            baseLayerLuminance.setValueFor(document.body, LuminanceMode[this.colorMode] == LuminanceMode.dark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
+			baseLayerLuminance.setValueFor(document.body, LuminanceMode[this.colorMode] == LuminanceMode.dark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
+		} else {
+			const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; 
+            baseLayerLuminance.setValueFor(document.body, isDarkMode ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
 		}
         //this.overlay = this.ownerDocument.createElement('div');
 		//this.overlay.classList.add('modal-backdrop');

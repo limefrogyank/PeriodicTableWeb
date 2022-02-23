@@ -3,10 +3,22 @@
     <head>
         <meta charset="utf-8" />
         <title>Periodic Table</title>
+        <style>
+            @media (prefers-color-scheme:dark){
+                body{
+                    background-color: #4d4d4d;
+                }
+            }
+            @media (prefers-color-scheme:light){
+                body{
+                    background-color: #ededed;
+                }
+            }
+        </style>
     <script defer src="periodicTable.js"></script></head>
     <body>
         <div style="min-width: 1000px; width: 420px;resize: horizontal;overflow: auto;">
-            <periodic-table casGroupNames="false" colorMode="light" showNames="true" hideTransitionMetals="false" maxPrecision="4"></periodic-table>
+            <periodic-table casGroupNames="false" showNames="true" hideTransitionMetals="false" maxPrecision="4"></periodic-table>
         </div>
     </body>
     
