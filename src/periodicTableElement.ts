@@ -68,6 +68,7 @@ export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) hideTransitionMetals:boolean=false;
     @attr({ mode: 'boolean' }) showNames:boolean=false;
     @attr({ mode: 'boolean' }) casGroupNames:boolean=false;
+	@attr maxPrecision: number = 4;    
     @attr colorMode :string = "light"; 
 
 	cancelButton: HTMLButtonElement;
@@ -174,6 +175,7 @@ export class PeriodicTable extends FASTElement {
 							name="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).name}"
                             mass="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).atomic_mass}"
                             showNames="${this.showNames}" 
+							maxPrecision="${this.maxPrecision}"
                             >
 				</element-cell>
 				`)}

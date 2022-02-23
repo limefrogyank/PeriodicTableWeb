@@ -17,10 +17,23 @@ const template = html<ElementCell>`
     <div class="atomicNumber" aria-label="Atomic Number ${x=>x.number}">${x=>x.number}</div>
     <div class="symbol" aria-label="Symbol ${x=>x.symbol.replace(/./g,' $&')}">${x=>x.symbol}</div>
     ${when(x=> x.showNames, html`<div class="name" aria-label="${x=>x.name}">${x=>x.name}</div>`)}
-    <div class="mass" aria-label="Atomic Mass ${x=>x.mass}">${x=>x.mass}</div>
+    <div class="mass" aria-label="Atomic Mass ${x=>precisionRound(x.mass, x.maxPrecision)}">${x=>precisionRound(x.mass, x.maxPrecision)}</div>
 </div>
 
 `;
+
+// https://expertcodeblog.wordpress.com/2018/02/12/typescript-javascript-round-number-by-decimal-pecision/
+function precisionRound(number: number, precision: number)
+{
+  if (precision < 0)
+  {
+    let factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+  }
+  else
+    return +(Math.round(Number(number + "e+" + precision)) +
+      "e-" + precision);
+}
 
 const styles = css`
 .hidden {
@@ -52,7 +65,7 @@ const styles = css`
 
 @customElement({
 	name: 'element-cell',
-	template,
+	template, 
 	styles 
 })
 export class ElementCell extends FASTElement {
@@ -62,6 +75,7 @@ export class ElementCell extends FASTElement {
     @attr mass: number;
     @attr phase: string;
     
+    @attr maxPrecision: number = 4;    
     @attr({ mode: 'boolean' }) showNames: boolean = true;
     
     connectedCallback(){
