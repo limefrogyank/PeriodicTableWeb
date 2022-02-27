@@ -8,6 +8,10 @@ import {ChemicalElementButton, chemicalElementButton} from './elementButton';
 import {DataGridRow2, fastDataGridRow2} from './DataGridRow2';
 import {DataGrid2, fastDataGrid2} from './DataGrid2';
 import {DataGridCell2, fastDataGridCell2} from './DataGridCell2';
+import {
+    eventFocus,
+    eventFocusOut
+} from "@microsoft/fast-web-utilities";
 
 
 // provideFluentDesignSystem()
@@ -36,7 +40,7 @@ ElementCell;
 
 const template = html<PeriodicTable>`
 
-<div style="margin-left:auto;margin-right:auto;padding:10px;" class="main">
+<div ${ref("divContainer")} style="margin-left:auto;margin-right:auto;padding:10px;" class="main" tabindex="0">
     <fast-data-grid-2 ${ref("periodicTableGrid")}  ></data-grid>
 </div>
 
@@ -61,7 +65,10 @@ enum LuminanceMode {
 @customElement({
 	name: 'periodic-table',
 	template,
-	styles 
+	styles ,
+	shadowOptions:{
+		delegatesFocus:true
+	  }
 })
 export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) visible: boolean = false;
@@ -77,6 +84,7 @@ export class PeriodicTable extends FASTElement {
 	mainModal:HTMLDivElement;
 
 	periodicTableGrid: DataGrid;
+	divContainer: HTMLDivElement;
 
 	connectedCallback(){ 
 		super.connectedCallback(); 
@@ -87,6 +95,9 @@ export class PeriodicTable extends FASTElement {
 			const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; 
             baseLayerLuminance.setValueFor(document.body, isDarkMode ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
 		}
+
+		this.addEventListener(eventFocus, this.handleFocus);
+		this.addEventListener(eventFocusOut, this.handleFocusOut);
         //this.overlay = this.ownerDocument.createElement('div');
 		//this.overlay.classList.add('modal-backdrop');
 		//this.overlay.classList.add('fade');
@@ -425,6 +436,20 @@ export class PeriodicTable extends FASTElement {
 	// </fluent-data-grid-cell>
 	// 	`;
 	}
+
+	public disconnectedCallback(): void {
+		this.removeEventListener(eventFocus, this.handleFocus);
+	}
+
+	public handleFocus(e: FocusEvent): void {
+        this.periodicTableGrid.handleFocus(e);
+		this.divContainer.setAttribute("tabIndex", "-1");
+    }
+	public handleFocusOut(e: FocusEvent): void {
+        if (e.relatedTarget === null || !this.contains(e.relatedTarget as Element)) {
+            this.divContainer.setAttribute("tabIndex", "0");
+        }
+    }
 
 	visibleChanged(oldValue:boolean, newValue:boolean){
 		if (this.overlay != null){

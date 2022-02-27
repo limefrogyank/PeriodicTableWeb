@@ -20,7 +20,7 @@ const styles = css`
     position: relative;
     flex-direction: column;
 }
-`;
+`; 
 
 export class DataGrid2 extends FoundationElement {
 
