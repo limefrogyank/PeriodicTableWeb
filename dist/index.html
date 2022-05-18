@@ -7,4 +7,26 @@
                 body{
                     background-color: #ededed;
                 }
-            }</style><script defer="defer" src="periodicTable.js"></script></head><body><a href="test">Test</a><div style="min-width: 740px; width: 420px;overflow: auto;"><periodic-table casgroupnames="false" shownames="false" hidetransitionmetals="false" maxprecision="3"></periodic-table></div><a href="test">Test</a></body></html>
+            }</style><script defer="defer" src="periodicTable.js"></script></head><body><div style="min-width: 740px; width: 420px;overflow: auto;"><periodic-table id="periodicTable" casgroupnames="false" shownames="false" hidetransitionmetals="false" maxprecision="3"></periodic-table><script>const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const periodicTable = document.getElementById('periodicTable');
+                if (urlParams.has('maxPrecision')){
+                    var maxPrecision = urlParams.get('maxPrecision');
+                    periodicTable.maxPrecision = maxPrecision;
+                }
+                if (urlParams.has('hideTransitionMetals')){
+                    var hideTransitionMetals = urlParams.get('hideTransitionMetals');
+                    periodicTable.hideTransitionMetals = hideTransitionMetals;
+                }
+                if (urlParams.has('showNames')){
+                    var showNames = urlParams.get('showNames');
+                    periodicTable.showNames = showNames;
+                }
+                if (urlParams.has('colorMode')){
+                    var colorMode = urlParams.get('colorMode');
+                    periodicTable.colorMode = colorMode;
+                }
+                if (urlParams.has('casGroupNames')){
+                    var casGroupNames = urlParams.get('casGroupNames');
+                    periodicTable.casGroupNames = casGroupNames;
+                }</script></div></body></html>

@@ -15,10 +15,37 @@
                 }
             }
         </style>
+        
     </head>
     <body>
         <div style="min-width: 740px; width: 420px;overflow: auto;">
-            <periodic-table casGroupNames="false" showNames="false" hideTransitionMetals="false" maxPrecision="3"></periodic-table>
+            <periodic-table id="periodicTable" casGroupNames="false" showNames="false" hideTransitionMetals="false" maxPrecision="3"></periodic-table>
+            <script>
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                const periodicTable = document.getElementById('periodicTable');
+                if (urlParams.has('maxPrecision')){
+                    var maxPrecision = urlParams.get('maxPrecision');
+                    periodicTable.maxPrecision = maxPrecision;
+                }
+                if (urlParams.has('hideTransitionMetals')){
+                    var hideTransitionMetals = urlParams.get('hideTransitionMetals');
+                    periodicTable.hideTransitionMetals = hideTransitionMetals;
+                }
+                if (urlParams.has('showNames')){
+                    var showNames = urlParams.get('showNames');
+                    periodicTable.showNames = showNames;
+                }
+                if (urlParams.has('colorMode')){
+                    var colorMode = urlParams.get('colorMode');
+                    periodicTable.colorMode = colorMode;
+                }
+                if (urlParams.has('casGroupNames')){
+                    var casGroupNames = urlParams.get('casGroupNames');
+                    periodicTable.casGroupNames = casGroupNames;
+                }
+            </script>
+    
         </div>
     </body>
     
