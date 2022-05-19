@@ -1,4 +1,4 @@
-import {FASTElement, customElement, attr, html, ref, css,when} from '@microsoft/fast-element';
+import {FASTElement, customElement, attr, html, ref, css,when, ValueConverter} from '@microsoft/fast-element';
 import { ColumnDefinition, DataGrid, DataGridCell, Button } from '@microsoft/fast-foundation';
 import { provideFASTDesignSystem, fastButton, fastDialog, fastDataGrid, fastDataGridRow, fastDataGridCell, StandardLuminance,neutralForegroundRest } from '@microsoft/fast-components';
 import {baseLayerLuminance, neutralFillRest} from '@microsoft/fast-components';
@@ -62,6 +62,16 @@ enum LuminanceMode {
     system
 }
 
+const numberConverter: ValueConverter = {
+    toView(value: any): string {
+      return value.toString();
+    },
+  
+    fromView(value: string): any {
+        return parseFloat(value);
+    }
+  };
+
 @customElement({
 	name: 'periodic-table',
 	template,
@@ -75,7 +85,8 @@ export class PeriodicTable extends FASTElement {
 	@attr({ mode: 'boolean' }) hideTransitionMetals:boolean=false;
     @attr({ mode: 'boolean' }) showNames:boolean=false;
     @attr({ mode: 'boolean' }) casGroupNames:boolean=false;
-	@attr maxPrecision: number = 4;    
+	@attr({ converter: numberConverter}) maxPrecision: number = 4;  
+	@attr({ converter: numberConverter}) minDecimals: number = -1;      
     @attr colorMode :string = "system"; 
 
 	cancelButton: HTMLButtonElement;
@@ -88,7 +99,6 @@ export class PeriodicTable extends FASTElement {
 
 	connectedCallback(){ 
 		super.connectedCallback(); 
-  
 		if (LuminanceMode[this.colorMode] != LuminanceMode.system){
 			baseLayerLuminance.setValueFor(document.body, LuminanceMode[this.colorMode] == LuminanceMode.dark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
 		} else {
@@ -189,6 +199,7 @@ export class PeriodicTable extends FASTElement {
                             mass="${x=> (x.rowData as Map<number,ElementData>).get(+x.columnDefinition.columnDataKey).atomic_mass}"
                             showNames="${this.showNames}" 
 							maxPrecision="${this.maxPrecision}"
+							minDecimals="${this.minDecimals}"
                             >
 				</element-cell>
 				`)}

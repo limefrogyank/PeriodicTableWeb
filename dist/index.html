@@ -14,6 +14,10 @@
                     var maxPrecision = urlParams.get('maxPrecision');
                     periodicTable.maxPrecision = maxPrecision;
                 }
+                if (urlParams.has('minDecimals')){
+                    var minDecimals = urlParams.get('minDecimals');
+                    periodicTable.minDecimals = minDecimals;
+                }
                 if (urlParams.has('hideTransitionMetals')){
                     var hideTransitionMetals = urlParams.get('hideTransitionMetals');
                     periodicTable.hideTransitionMetals = hideTransitionMetals;
